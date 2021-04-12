@@ -1,3 +1,4 @@
+let usersArray = require('./data')
 // ***************************************************************************
 // Iteration 1 - `for...of` loop
 // ***************************************************************************
@@ -6,10 +7,13 @@ const getFirstNames = arr => {
   const userFirstNames = [];
   for (let user of arr) {
     // Your code goes here ...
+    const {firstName} = user
+    userFirstNames.push(firstName)
   }
+  return userFirstNames
 };
 
-getFirstNames(usersArray);
+console.log(getFirstNames(usersArray));
 // expected output:
 // [ 'Kirby', 'Tracie', 'Kendra', 'Kinney', 'Howard', 'Rachelle', 'Lizzie' ]
 
@@ -18,10 +22,17 @@ getFirstNames(usersArray);
 // ***************************************************************************
 
 const getFullNames = arr => {
+  const fullNames = [];
   // Your code goes here ...
+  for (let user of arr) {
+    let {firstName, lastName} = user;
+   let twoNames = `${firstName} ${lastName}`;
+   fullNames.push(twoNames);
 };
+return fullNames;
+}
 
-getFullNames(usersArray);
+console.log(getFullNames(usersArray));
 // expected output:
 // [ 'Kirby Doyle', 'Tracie May', 'Kendra Hines', 'Kinney Howard',
 //   'Howard Gilmore', 'Rachelle Schneider', 'Lizzie Alford' ]
@@ -29,12 +40,30 @@ getFullNames(usersArray);
 // ***************************************************************************
 // Iteration 3 - ES6 destructuring , for of loop, object literal
 // ***************************************************************************
+// const userDetails = {
+//   firstName,
+//   lastName,
+//   balance
+// };
+
 
 const getUsersCreditDetails = arr => {
   // Your code goes here ...
+  // let clonnedArray = JSON.parse(JSON.stringify(arr))
+  const userCredentials = [];
+  for (let user of arr) {
+    let {firstName, lastName, balance} = user;
+    const finalCredentials = {
+      firstName: firstName,
+      lastName: lastName,
+      balance: balance
+    };
+    userCredentials.push(finalCredentials);
+  }
+  return userCredentials;
 };
 
-getUsersCreditDetails(usersArray);
+console.log(getUsersCreditDetails(usersArray));
 // expected output:
 // [ { firstName: 'Kirby', lastName: 'Doyle', balance: '$3,570.06' },
 // { firstName: 'Tracie', lastName: 'May', balance: '$1,547.73' },
@@ -50,9 +79,24 @@ getUsersCreditDetails(usersArray);
 
 const genderView = users => {
   // Your code goes here ...
+  const maleUsers = [];
+  const femaleUsers = [];
+
+  [...users].filter((user) => {
+    const {firstName, lastName, gender} = user;
+    if (gender === "male") {
+      maleUsers.push(`${firstName} ${lastName}`)
+    } else if (gender === "female") {
+       femaleUsers.push(`${firstName} ${lastName}`)
+    }
+  });
+  return {
+    maleUsers,
+    femaleUsers
+  }
 };
 
-genderView(usersArray);
+console.log(genderView(usersArray));
 // expected output:
 // {
 //    femaleUsers: [ 'Tracie May', 'Kendra Hines', 'Rachelle Schneider', 'Lizzie Alford' ],
@@ -67,9 +111,11 @@ const data = genderView(usersArray);
 
 const genderCount = data => {
   // Your code goes here ...
+  const {maleUsers, femaleUsers} = data;
+  return `male:${maleUsers.length} female: ${femaleUsers.length}`
 };
 
-genderCount(data);
+console.log(genderCount(data));
 // expected output:
 // Female: 4
 // Male: 3
@@ -80,7 +126,22 @@ genderCount(data);
 
 const promo20 = users => {
   // Your code goes here ...
+  for (let user of users) {
+    const {firstName, balance} = user;
+    let userBalance = balance.slice(1);
+    userBalance = userBalance.replace(",", "")
+
+    if(userBalance >= 20000){
+     console.log(`Dear ${firstName}, since your balance is ${balance}, you are eligible to apply for this awesome credit card.`)
+    }
+  }
+  //We tried to return the result but if a user had 20000 balance, the if statement would stop there
+  //We also created an array and tried to push to it but it would remain empty even after
+  //converting the userBalance to a Number() also didn't work
+  //Console log saves the day
+
 };
+promo20(usersArray);
 
 // expected output:
 // Dear Howard, since your balance is $21,307.75, you are eligible to apply for this awesome credit card.
@@ -92,9 +153,12 @@ const promo20 = users => {
 
 const addActive = users => {
   // Your code goes here ...
+  users.map(user => user.isActive = true)
+
+  return users;
 };
 
-addActive(usersArray);
+ console.log(addActive(usersArray));
 // expected output:
 // [
 //    { firstName: 'Kirby',
